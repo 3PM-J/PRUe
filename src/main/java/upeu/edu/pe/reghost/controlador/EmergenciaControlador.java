@@ -27,15 +27,15 @@ public class EmergenciaControlador {
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model modelo) {
         Emergencias emergencia = new Emergencias();
-        emergencia.setFechaHoraIngreso(LocalDateTime.now());
+        emergencia.setFechaHora(LocalDateTime.now());
         modelo.addAttribute("emergencia", emergencia);
         return "emergencias/nueva_emergencia";
     }
 
     @PostMapping("/guardar")
     public String guardarEmergencia(@ModelAttribute("emergencia") Emergencias emergencia) {
-        if (emergencia.getFechaHoraIngreso() == null) {
-            emergencia.setFechaHoraIngreso(LocalDateTime.now());
+        if (emergencia.getFechaHora() == null) {
+            emergencia.setFechaHora(LocalDateTime.now());
         }
         emergenciaServicio.save(emergencia);
         return "redirect:/emergencias/";
