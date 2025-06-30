@@ -117,8 +117,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="doctorAsignado" th:field="*{doctorAsignado}"
-                                   placeholder="Doctor asignado" required>
+                            <select class="form-select" id="doctorAsignado" th:field="*{doctorAsignado}" required>
+                                <option value="">Seleccione un doctor</option>
+                                <option th:each="doctor : ${listaDoctores}" 
+                                        th:value="${doctor.nombre + ' ' + doctor.apellido + ' - ' + doctor.especialidad}"
+                                        th:text="${doctor.nombre + ' ' + doctor.apellido + ' (' + doctor.especialidad + ')'}"
+                                        th:selected="${emergencia.doctorAsignado == doctor.nombre + ' ' + doctor.apellido + ' - ' + doctor.especialidad}">
+                                </option>
+                            </select>
                             <label for="doctorAsignado"><i class="fas fa-user-md me-2"></i>Doctor Asignado</label>
                         </div>
                     </div>

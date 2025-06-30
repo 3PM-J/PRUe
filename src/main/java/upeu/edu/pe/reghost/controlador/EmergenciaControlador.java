@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import upeu.edu.pe.reghost.entidades.Emergencias;
+import upeu.edu.pe.reghost.entidades.Doctores;
 import upeu.edu.pe.reghost.servicio.EmergenciaServicio;
+import upeu.edu.pe.reghost.servicio.DoctorServicio;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +18,9 @@ public class EmergenciaControlador {
 
     @Autowired
     private EmergenciaServicio emergenciaServicio;
+    
+    @Autowired
+    private DoctorServicio doctorServicio;
 
     @GetMapping("/")
     public String listarEmergencias(Model modelo) {
@@ -28,7 +33,12 @@ public class EmergenciaControlador {
     public String mostrarFormularioNuevo(Model modelo) {
         Emergencias emergencia = new Emergencias();
         emergencia.setFechaHora(LocalDateTime.now());
+        
+        // Obtener lista de doctores para el select
+        List<Doctores> listaDoctores = doctorServicio.listAll();
+        
         modelo.addAttribute("emergencia", emergencia);
+        modelo.addAttribute("listaDoctores", listaDoctores);
         return "emergencias/nueva_emergencia";
     }
 
@@ -44,7 +54,10 @@ public class EmergenciaControlador {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable("id") Long id, Model modelo) {
         Emergencias emergencia = emergenciaServicio.get(id);
+        List<Doctores> listaDoctores = doctorServicio.listAll();
+        
         modelo.addAttribute("emergencia", emergencia);
+        modelo.addAttribute("listaDoctores", listaDoctores);
         return "emergencias/editar_emergencia";
     }
 

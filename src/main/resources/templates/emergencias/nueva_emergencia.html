@@ -99,10 +99,14 @@
             margin-bottom: 2rem;
             font-size: 1.1rem;
         }
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            font-size: 1rem;
+        .alert-warning {
+            background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+            color: #333;
+            border: none;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -117,6 +121,14 @@
         <div class="alert alert-emergency">
             <i class="fas fa-exclamation-triangle me-2"></i>
             <strong>EMERGENCIA:</strong> Complete rápidamente los campos requeridos para un registro eficiente.
+        </div>
+
+        <!-- Alerta si no hay doctores registrados -->
+        <div class="alert alert-warning" th:if="${#lists.isEmpty(listaDoctores)}">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Atención:</strong> No hay doctores registrados en el sistema. 
+            <a th:href="@{/doctores/nuevo}" class="text-decoration-none fw-bold">Registre un doctor primero</a> 
+            antes de continuar con la emergencia.
         </div>
 
         <form th:action="@{/emergencias/guardar}" th:object="${emergencia}" method="post">
@@ -134,8 +146,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="doctorAsignado" th:field="*{doctorAsignado}"
-                                   placeholder="Doctor asignado" required>
+                            <select class="form-select" id="doctorAsignado" th:field="*{doctorAsignado}" required>
+                                <option value="">Seleccione un doctor</option>
+                                <option th:each="doctor : ${listaDoctores}" 
+                                        th:value="${doctor.nombre + ' ' + doctor.apellido + ' - ' + doctor.especialidad}"
+                                        th:text="${doctor.nombre + ' ' + doctor.apellido + ' (' + doctor.especialidad + ')'}">
+                                </option>
+                            </select>
                             <label for="doctorAsignado"><i class="fas fa-user-md me-2"></i>Doctor Asignado</label>
                         </div>
                     </div>
@@ -174,7 +191,7 @@
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn-custom">
+                <button type="submit" class="btn-custom" th:disabled="${#lists.isEmpty(listaDoctores)}">
                     <i class="fas fa-save me-2"></i>Registrar Emergencia
                 </button>
                 <a th:href="@{/emergencias/}" class="btn-secondary-custom">
